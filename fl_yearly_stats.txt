@@ -1,0 +1,56 @@
+{
+    "wealth": -25100,
+    "total_debt_paid": 0.0,
+    "total_morgage_paid": 0.0,
+    "total_savings": 5000
+}{
+    "wealth": -9432,
+    "total_debt_paid": 918.0,
+    "total_morgage_paid": 0.0,
+    "total_savings": 18404.0
+}{
+    "wealth": 7320,
+    "total_debt_paid": 1983.552,
+    "total_morgage_paid": 0.0,
+    "total_savings": 32746.280000000002
+}{
+    "wealth": 25459,
+    "total_debt_paid": 3187.8065279999996,
+    "total_morgage_paid": 0.0,
+    "total_savings": 48092.5196
+}{
+    "wealth": -85187,
+    "total_debt_paid": 4515.150926591999,
+    "total_morgage_paid": 8512.31320507488,
+    "total_savings": 63803.636538243765
+}{
+    "wealth": -53078,
+    "total_debt_paid": 5942.418771545087,
+    "total_morgage_paid": 17024.62641014977,
+    "total_savings": 81323.89109592083
+}{
+    "wealth": -18473,
+    "total_debt_paid": 7438.213109713169,
+    "total_morgage_paid": 25536.939615224637,
+    "total_savings": 100070.56347263529
+}{
+    "wealth": 19054,
+    "total_debt_paid": 8962.390643565193,
+    "total_morgage_paid": 34049.25282029951,
+    "total_savings": 120129.50291571977
+}{
+    "wealth": 59951,
+    "total_debt_paid": 10465.757621019275,
+    "total_morgage_paid": 42561.56602537438,
+    "total_savings": 141592.56811982015
+}{
+    "wealth": 104665,
+    "total_debt_paid": 11890.03071960748,
+    "total_morgage_paid": 51073.879230449245,
+    "total_savings": 164558.04788820757
+}{
+    "wealth": 153641,
+    "total_debt_paid": 13168.117332007456,
+    "total_morgage_paid": 59586.19243552411,
+    "total_savings": 189131.1112403821
+}
