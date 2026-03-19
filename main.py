@@ -1,6 +1,20 @@
 import matplotlib.pyplot as plt
 import json
 class Person():
+
+    HOUSE_PRICE = 175000
+    INIT_SAVINGS_BAL = 5000
+    INIT_DEBT = 30100
+    INT_ON_REMAINING_DEBT = 1.2
+    INT_ON_SAVINGS_FL = 1.07
+    INT_ON_SAVINGS_NFL = 1.02
+    INT_ON_MORTGAGE_FL = 4.5
+    INT_ON_MORTGAGE_NFL = 5.0
+    DEBT_PAYMENT_PERC = 0.03
+    RENT_PER_MONTH = 850
+    SALARY_TO_CHECKING = 18300
+    SALARY_TO_SAVINGS = 12200
+    
     def __init__(self,name: str, is_literate: bool):
         ''''
         Person class
@@ -23,8 +37,8 @@ class Person():
         self.morgage_payment = 0.0
 
         self.checking_balance = 0.0
-        self.savings_balance = 5000
-        self.debt = 30100
+        self.savings_balance = Person.INIT_SAVINGS_BAL
+        self.debt = Person.INIT_DEBT
         self.morgage_loan = 0.0
 
         self.debt_paid = 0.0
@@ -53,15 +67,15 @@ class Person():
 
     def allocate_salary(self):
         '''Increase the amount in savings and checking'''
-        self.checking_balance += 18300
-        self.savings_balance += 12200
+        self.checking_balance += Person.SALARY_TO_CHECKING
+        self.savings_balance += Person.SALARY_TO_SAVINGS
 
     def recieve_savings_interest(self):
         '''Increases the amount of money in savings'''
         if self.is_literate:
-            self.savings_balance = self.savings_balance * 1.07
+            self.savings_balance = self.savings_balance * Person.INT_ON_SAVINGS_FL
         else:
-            self.savings_balance = self.savings_balance * 1.02
+            self.savings_balance = self.savings_balance * Person.INT_ON_SAVINGS_NFL
 
     def debt_payment_and_interest(self):
         '''
@@ -75,16 +89,16 @@ class Person():
 
             #Determine debt payment for year
             if self.is_literate:
-                payment = (self.debt * 0.03) + 15
+                payment = (self.debt * Person.DEBT_PAYMENT_PERC) + 15
             else:
-                payment = (self.debt * 0.03) + 1
+                payment = (self.debt * Person.DEBT_PAYMENT_PERC) + 1
             
             #Ensure payment isn't more than actual debt
             if payment > self.debt: payment = self.debt
 
             #Add debt paid and add interest to remaining debt
             self.debt_paid += payment
-            self.debt = (self.debt - self.debt_paid) * 1.2
+            self.debt = (self.debt - self.debt_paid) * Person.INT_ON_REMAINING_DEBT
 
             #Reduce savings or checking account? 
             if payment > self.checking_balance:
@@ -101,15 +115,15 @@ class Person():
         for months in range(12):
             if not self.has_a_house:
                 #Check if they can buy a home
-                if (self.is_literate) and (self.checking_balance >= (175000 * 0.2)):
-                    self.morgage_loan = 175000 - (175000 * 0.2)
+                if (self.is_literate) and (self.checking_balance >= (Person.HOUSE_PRICE * 0.2)):
+                    self.morgage_loan = Person.HOUSE_PRICE - (Person.HOUSE_PRICE * 0.2)
                     self.buy_house()
-                elif (not self.is_literate) and (self.checking_balance > (175000 * 0.05)):
-                    self.morgage_loan = 175000 - (175000 * 0.05)
+                elif (not self.is_literate) and (self.checking_balance > (Person.HOUSE_PRICE * 0.05)):
+                    self.morgage_loan = Person.HOUSE_PRICE - (Person.HOUSE_PRICE * 0.05)
                     self.buy_house()
                 else: #If they can't buy a home, pay rent
                     if months == 0: self.years_renting += 1
-                    self.checking_balance -= 850
+                    self.checking_balance -= Person.RENT_PER_MONTH
 
             if self.has_a_house:   
                 #Pay morgage
@@ -129,14 +143,14 @@ class Person():
                     self.years_in_debt += 1
 
     def buy_house(self):
-        '''(1. Calculuate loan amount
+        '''(1. Loan amount calculated in rent or morgage function
             2. Calculuate monthly morgage payment and assigns it to self.morgage_payment()
             3. Update has house to be true)
             4. Pays for first house'''
         if self.is_literate:
-            i = (4.5/100) / 12
+            i = (Person.INT_ON_MORTGAGE_FL/100) / 12
         else:
-            i = (5/100) /12
+            i = (Person.INT_ON_MORTGAGE_NFL/100) /12
         
         N = 360
         D = ((((i+1)**N) - 1) / (i*((i+1)**N)))      
@@ -199,54 +213,83 @@ class Simulation():
 
 def plot_wealth(fl_wealth_history: List, nfl_wealth_history: List, filename: str =
 "wealth_over_time.png"):
-    #Create num years array
+    #Create num years arrayS
     flyears_arr = []
     for year in range(len(fl_wealth_history)):
         flyears_arr.append(year+1)
     
-    plt.subplot(1,2,1)
-    plt.bar(flyears_arr,fl_wealth_history, color = "Green")
-    plt.xlabel("Years")
-    plt.ylabel("Wealth (dollars)")
-    plt.grid(True)
-    plt.title("Financially literate person versus ")
-    plt.tight_layout()
-
-    
     nflyears_arr = []
     for year in range(len(nfl_wealth_history)):
         nflyears_arr.append(year+1)
-    plt.subplot(1,2,2)
-    plt.bar(nflyears_arr,nfl_wealth_history,color = "Red")
-    plt.xlabel("Years")
-    plt.ylabel("Wealth (dollars)")
-    plt.grid(True)
-    plt.title("Non-financially literate over time")
-    plt.tight_layout()
+
+    #Create figures for plotting
+    fig,axs = plt.subplots(2, sharex=True)
+    fig.suptitle("Financially-literate vs Financially-iliterate wealth over time")
+    axs[0].bar(flyears_arr,fl_wealth_history,color="Green")
+    axs[0].set_title('Financially literate person')
+    axs[0].set(ylabel="wealth (in dollars)")
+    axs[1].bar(nflyears_arr,nfl_wealth_history, color="Red")
+    axs[1].set_title('Financially iliterate person')
+    axs[1].set(ylabel="wealth (in dollars)")
 
     plt.show()
     plt.savefig(filename)
 
+def run_tests() -> None:
+    #Create people and simulations
+    financially_lit = Person("Hannah",True)
+    financially_unlit = Person("Marcus",False)
+    sim_FL = Simulation(financially_lit,40)
+    sim_NFL = Simulation(financially_unlit,40)
+
+    #Person(): init()
+    fn_name = 'Person constructor'
+    person = financially_lit
+    result = person.name
+    expected = 'Hannah'
+    error_message= f"While testing {fn_name}, expected {expected} got {result}"
+    assert expected == result,error_message
+
+    result = person.savings_balance
+    expected = 5000
+    error_message= f"While testing {fn_name}, expected {expected} got {result}"
+    assert expected == result,error_message
+
+    result = person.years_renting
+    expected = 0
+    error_message= f"While testing {fn_name}, expected {expected} got {result}"
+    assert expected == result,error_message
+
+    #Person wealth() getter and setter
+    fn_name = "Wealth getter"
+    result = person.wealth
+    expected = -25100
+    error_message= f"While testing {fn_name}, expected {expected} got {result}"
+    assert expected == result,error_message
+
+    fn_name = "Wealth setter"
+    person.wealth = 0
+    result = person.wealth
+    expected = 0
+    error_message= f"While testing {fn_name}, expected {expected} got {result}"
+    assert expected == result,error_message
 
 nisema = Person("nisema", True)
 sim_fl = Simulation(nisema,10)
 wealth_fl = sim_fl.run()
 summary_fln = sim_fl.summary()
-print(wealth_fl)
-print(summary_fln)
 
 holly = Person("holly",False)
 sim_nfl = Simulation(holly,10)
 wealth_nfl = sim_nfl.run()
 summary_nfl = sim_nfl.summary()
-print(wealth_nfl)
-print(summary_nfl)
 
 with open("fl_yearly_stats.txt", "w") as file:
     for dict in nisema.year:
         json.dump(dict,file,indent=4)
 
-plot_wealth(wealth_fl,wealth_nfl)
+#plot_wealth(wealth_fl,wealth_nfl)
+run_tests()
 
 
 '''
